@@ -1306,6 +1306,11 @@ export class SpellAttributes<T> extends MaskCell<T> {
     get UNK95() { return this.bit(245); }
 
     /**
+     * Chain using radius
+     */
+    get CHAIN_USING_RADIUS() { return this.bit(245); }
+
+    /**
      * No comment (yet!)
      */
     get UNK96() { return this.bit(246); }
