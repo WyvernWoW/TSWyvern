@@ -7897,6 +7897,10 @@ declare namespace _hidden {
               player: TSPlayer
             , attackPower: TSMutableNumber<float>
         ) => void)
+        OnUpdateScale(callback: (
+            player: TSPlayer
+            , scale: TSMutableNumber<float>
+        ) => void)
 
         /**
          * @param player

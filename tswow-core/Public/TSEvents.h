@@ -324,6 +324,10 @@ struct TSEvents
              , TSPlayer
              , TSMutableNumber<float>
          )
+         EVENT(OnUpdateScale
+             , TSPlayer
+             , TSMutableNumber<float>
+         )
 
          EVENT(OnCalcTalentPoints
              , TSPlayer
