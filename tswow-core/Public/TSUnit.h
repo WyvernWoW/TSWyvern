@@ -97,6 +97,13 @@ public:
     bool SetCharmedBy(TSUnit charmer, uint32 type);
     void RemoveCharmedBy(TSUnit charmer);
 
+    // ACHERAX
+    // wyvern-start
+
+    TSNumber<float> GetCombatReach();
+
+    // wyvern-end
+
     TSNumber<float> GetStat(uint32 stat);
     TSNumber<uint32> GetBaseSpellPower(uint32 spellschool);
     TSUnit  GetVictim();

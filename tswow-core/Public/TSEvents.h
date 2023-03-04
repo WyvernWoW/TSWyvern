@@ -300,7 +300,7 @@ struct TSEvents
              , TSNumber<float>
              , TSNumber<float>
          );
-        EVENT(OnCalcIntellectManaBonus
+         EVENT(OnCalcIntellectManaBonus
              , TSPlayer
              , TSMutableNumber<float>
              , TSNumber<float>
@@ -314,20 +314,25 @@ struct TSEvents
              , TSNumber<int>
              , TSNumber<int>
              , TSNumber<int>
-         )
+         );
 
          EVENT(OnUpdateAttackPower
              , TSPlayer
              , TSMutableNumber<float>
-         )
+         );
          EVENT(OnUpdateRangedAttackPower
              , TSPlayer
              , TSMutableNumber<float>
-         )
+         );
+
+         // wyvern-start
+
          EVENT(OnUpdateScale
              , TSPlayer
              , TSMutableNumber<float>
-         )
+         );
+
+         // wyvern-end
 
          EVENT(OnCalcTalentPoints
              , TSPlayer
@@ -450,6 +455,12 @@ struct TSEvents
         EVENT(OnEnterCombatWith, TSUnit me, TSUnit other)
         EVENT(OnExitCombatWith, TSUnit me, TSUnit other)
         EVENT(OnSetTarget, TSUnit, TSNumber<uint64> new_target, TSNumber<uint64> old_target)
+
+        // wyvern-start
+
+        EVENT(OnUpdateCombatReach, TSUnit unit, TSMutableNumber<float> combatReach)
+
+        // wyvern-end
     } Unit;
 
     struct SpellEvents : public TSMappedEventsRegistry

@@ -695,6 +695,21 @@ TSNumber<float> TSUnit::GetStat(uint32 stat)
     return unit->GetStat((Stats)stat);
 }
 
+// ACHERAX
+// wyvern-start
+
+/**
+* Returns the [Unit]'s combat reach
+*
+* @return float combatReach
+*/
+TSNumber<float> TSUnit::GetCombatReach()
+{
+    return unit->GetCombatReach();
+}
+
+// wyvern-end
+
 /**
  * Returns the [Unit]'s base spell power
  *

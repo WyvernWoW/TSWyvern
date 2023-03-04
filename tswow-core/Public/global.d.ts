@@ -6189,6 +6189,18 @@ declare interface TSUnit extends TSWorldObject {
      */
     GetStat(stat : uint32) : TSNumber<float>
 
+    // ACHERAX
+    // wyvern-start
+
+    /**
+     * Returns [Unit]'s combat reach
+     * 
+     * @return float combatReach
+     * */
+    GetCombatReach(): TSNumber<float>
+
+    // wyvern-end
+
     /**
      * Returns the [Unit]'s base spell power
      *
@@ -7897,10 +7909,15 @@ declare namespace _hidden {
               player: TSPlayer
             , attackPower: TSMutableNumber<float>
         ) => void)
+
+        // wyvern-start
+
         OnUpdateScale(callback: (
             player: TSPlayer
             , scale: TSMutableNumber<float>
         ) => void)
+
+        //wyvern-end
 
         /**
          * @param player
@@ -8626,6 +8643,14 @@ declare namespace _hidden {
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
+
+        // ACHERAX
+        // wyvern-start
+
+        OnUpdateCombatReach(callback: (unit: TSUnit, combatReach: TSMutableNumber<float>) => void)
+
+        // wyvern-end
+        
     }
 
     export class Battleground<T> {
