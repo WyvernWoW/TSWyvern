@@ -44,31 +44,31 @@
 
 #include <cstdint>
 
-void TC_GAME_API ReloadPlayer(void(ptr)(TSPlayer, bool));
+void TC_GAME_API ReloadPlayer(std::function<void(TSPlayer, bool)> fn);
 void TC_GAME_API ReloadPlayer(sol::protected_function);
 
-void TC_GAME_API ReloadCreature(void(ptr)(TSCreature));
-void TC_GAME_API ReloadCreature(void(ptr)(TSCreature), TSNumber<uint32> id);
+void TC_GAME_API ReloadCreature(std::function<void(TSCreature)> fn);
+void TC_GAME_API ReloadCreature(std::function<void(TSCreature)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadCreature(sol::protected_function);
 void TC_GAME_API ReloadCreature(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject));
-void TC_GAME_API ReloadGameObject(void(ptr)(TSGameObject), TSNumber<uint32> id);
+void TC_GAME_API ReloadGameObject(std::function<void(TSGameObject)> fn);
+void TC_GAME_API ReloadGameObject(std::function<void(TSGameObject)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadGameObject(sol::protected_function);
 void TC_GAME_API ReloadGameObject(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadMap(void(ptr)(TSMap));
-void TC_GAME_API ReloadMap(void(ptr)(TSMap), TSNumber<uint32> id);
+void TC_GAME_API ReloadMap(std::function<void(TSMap)> fn);
+void TC_GAME_API ReloadMap(std::function<void(TSMap)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadMap(sol::protected_function);
 void TC_GAME_API ReloadMap(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground));
-void TC_GAME_API ReloadBattleground(void(ptr)(TSBattleground), TSNumber<uint32> id);
+void TC_GAME_API ReloadBattleground(std::function<void(TSBattleground)> fn);
+void TC_GAME_API ReloadBattleground(std::function<void(TSBattleground)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadBattleground(sol::protected_function);
 void TC_GAME_API ReloadBattleground(sol::protected_function, TSNumber<uint32> id);
 
-void TC_GAME_API ReloadInstance(void(ptr)(TSInstance));
-void TC_GAME_API ReloadInstance(void(ptr)(TSInstance), TSNumber<uint32> id);
+void TC_GAME_API ReloadInstance(std::function<void(TSInstance)> fn);
+void TC_GAME_API ReloadInstance(std::function<void(TSInstance)> fn, TSNumber<uint32> id);
 void TC_GAME_API ReloadInstance(sol::protected_function);
 void TC_GAME_API ReloadInstance(sol::protected_function, TSNumber<uint32> id);
 
@@ -523,7 +523,7 @@ struct TSEvents
         ID_EVENT(OnEffectCalcSpellMod, TSAuraEffect, TSSpellModifier, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectManaShield, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> absorbAmount, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnEffectSplit, TSAuraEffect, TSAuraApplication, TSDamageInfo, TSMutableNumber<uint32> splitAmount, TSMutable<bool,bool> cancelDefault)
-
+        ID_EVENT(OnSetDuration, TSAura, TSMutableNumber<int32> duration, TSMutable<bool,bool> withMods);
         ID_EVENT(OnAfterCast, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnAfterHit, TSSpell, TSMutable<bool,bool> cancelDefault)
         ID_EVENT(OnBeforeCast, TSSpell, TSMutable<bool,bool> cancelDefault)
@@ -547,6 +547,7 @@ struct TSEvents
         ID_EVENT(OnSummoned, TSCreature, TSCreature)
         ID_EVENT(OnIsSummoned, TSCreature, TSWorldObject)
         ID_EVENT(OnSummonDespawn, TSCreature, TSCreature)
+        ID_EVENT(OnDespawn, TSCreature, TSWorldObject)
         ID_EVENT(OnSummonDies, TSCreature, TSCreature, TSUnit)
         ID_EVENT(OnHitBySpell, TSCreature, TSWorldObject, TSSpellInfo)
         ID_EVENT(OnSpellHitTarget, TSCreature, TSWorldObject, TSSpellInfo)
@@ -762,6 +763,7 @@ struct TSEvents
         ID_EVENT(OnOpenDoors, TSBattleground)
         ID_EVENT(OnCloseDoors, TSBattleground)
         ID_EVENT(OnReset, TSBattleground)
+        ID_EVENT(OnSendScore, TSBattleground, TSBattlegroundScore, TSWorldPacket, TSMutable<bool,bool> cancel)
         // requires special handling functions
         ID_EVENT(OnAchievementCriteria
             , TSBattleground

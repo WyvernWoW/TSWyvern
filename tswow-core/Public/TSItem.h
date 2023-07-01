@@ -21,6 +21,8 @@
 #include "TSObject.h"
 #include "TSItemTemplate.h"
 
+class TSGUID;
+
 class TC_GAME_API TSItem : public TSObject {
 public:
     Item* item;
@@ -48,7 +50,7 @@ public:
     bool IsConjuredConsumable();
     TSItemTemplate GetTemplate();
     std::string GetItemLink(uint8 locale);
-    TSNumber<uint64> GetOwnerGUID();
+    TSGUID GetOwnerGUID();
     TSPlayer  GetOwner();
     TSNumber<uint32> GetCount();
     TSNumber<uint32> GetMaxStackCount();
@@ -75,6 +77,12 @@ public:
     TSNumber<int32> GetRandomSuffix();
     TSNumber<uint32> GetItemSet();
     TSNumber<uint32> GetBagSize();
+    void SetRandomProperty(int32 propertyId);
+    void SetEnchantmentDuration(uint32 slot, uint32 duration);
+    void SetEnchantmentCharges(uint32 slot, uint32 charges);
+    void UpdateItemSuffixFactor();
+    TSNumber<uint32> GetEnchantmentDuration(uint32 slot);
+    TSNumber<uint32> GetEnchantmentCharges(uint32 slot);
     void SetOwner(TSPlayer player);
     void SetBinding(bool soulbound);
     void SetCount(uint32 count);

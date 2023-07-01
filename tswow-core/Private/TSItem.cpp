@@ -23,6 +23,7 @@
 #include "TSIncludes.h"
 #include "TSItem.h"
 #include "TSPlayer.h"
+#include "TSGUID.h"
 
 TSItem::TSItem(Item *item) : TSObject(item)
 {
@@ -303,9 +304,9 @@ std::string TSItem::GetItemLink(uint8 locale)
 #endif
 }
 
-TSNumber<uint64> TSItem::GetOwnerGUID()
+TSGUID TSItem::GetOwnerGUID()
 {
-    return TS_GUID(item->GetOwnerGUID());
+    return TSGUID(item->GetOwnerGUID());
 }
 
 /**
@@ -687,4 +688,34 @@ TSItem CreateItem(uint32 entry, uint32 count)
 TSItemTemplate TSItem::GetTemplate()
 {
     return TSItemTemplate(item->GetTemplate());
+}
+
+void TSItem::SetRandomProperty(int32 propertyId)
+{
+    item->SetItemRandomProperties(propertyId);
+}
+
+void TSItem::UpdateItemSuffixFactor()
+{
+    item->UpdateItemSuffixFactor();
+}
+
+void TSItem::SetEnchantmentDuration(uint32 slot, uint32 duration)
+{
+    item->SetEnchantmentDuration(static_cast<EnchantmentSlot>(slot), duration, item->GetOwner());
+}
+
+void TSItem::SetEnchantmentCharges(uint32 slot, uint32 charges)
+{
+    item->SetEnchantmentCharges(static_cast<EnchantmentSlot>(slot), charges);
+}
+
+TSNumber<uint32> TSItem::GetEnchantmentDuration(uint32 slot)
+{
+    return item->GetEnchantmentDuration(static_cast<EnchantmentSlot>(slot));
+}
+
+TSNumber<uint32> TSItem::GetEnchantmentCharges(uint32 slot)
+{
+    return item->GetEnchantmentCharges(static_cast<EnchantmentSlot>(slot));
 }
