@@ -65,6 +65,7 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
+declare const enum LiquidStatus {} /** Map.h:ZLiquidStatus */
 declare const enum EnchantmentSlot {} /** ItemDefines.h:EnchantmentSlot */
 declare const enum InventoryResult {} /** ItemDefines.h:InventoryResult */
 declare const enum TimerFlags {} /** TSTimer.h:TimerFlags */
@@ -3767,6 +3768,10 @@ declare class TSWorldPacket {
      */
     SetOpcode(opcode : uint32) : void
 
+    GetBytes(): TSArray<uint8>;
+
+    IsEmpty(): boolean;
+
     ReadInt8(): TSNumber<int8>;
     ReadInt8(index: uint32): TSNumber<int8>;
     WriteInt8(value: int8): void
@@ -3821,6 +3826,12 @@ declare class TSWorldPacket {
     ReadString(index: uint32): string
     WriteString(value: string): void
     WriteString(index: uint32, value: string): void
+
+    WriteBytes(index: uint32, value: TSArray<uint8>): void
+    WriteBytes(value: TSArray<uint8>): void
+
+    ReadBytes(index: uint32, size: uint32): TSArray<uint8>
+    ReadBytes(size: uint32): TSArray<uint8>
 }
 
 declare interface TSWorldStatePacket {
@@ -3950,6 +3961,17 @@ declare interface TSMainThreadContext {
     GetPlayer(name: string): TSPlayer
     GetMap(mapid: uint32, instanceId?: uint32): TSMap
     SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>): void;
+}
+
+declare interface TSWeather
+{
+    GetState(): TSNumber<uint32>;
+    GetType(): TSNumber<uint32>;
+    GetIntensity(): TSNumber<float>;
+    SetWeather(type: WeatherType, intensity: float, triggerScripts?: bool): void;
+    GetZone(): TSNumber<uint32>;
+    GetScriptID(): TSNumber<uint32>;
+    GetMap(): TSMap;
 }
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
@@ -5063,6 +5085,12 @@ declare interface TSSpell extends TSEntityProvider {
 
     GetGlyphSlot() : TSNumber<uint32>
 
+    GetBasePoints(index: uint32) : TSNumber<uint32>
+    GetMaxAffectedTargetsOverride(): TSNumber<uint32>
+    GetRadiusModOverride(): TSNumber<float>
+    GetAuraStackAmountOverride(): TSNumber<uint8>
+    GetCritChanceOverride(): TSNumber<float>
+
     /**
      * Sets the [Spell] to automatically repeat.
      *
@@ -5248,6 +5276,9 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetGameObjectsInRange(range : float,entry : uint32,hostile : uint32) : TSArray<TSGameObject>
 
     IsBehind(obj: TSWorldObject): bool
+
+    IsOutdoors(): bool
+    GetLiquidStatus(): LiquidStatus
 
     HasCollision(id: string);
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
@@ -8695,6 +8726,9 @@ declare namespace _hidden {
     }
 
     export class Unit {
+        OnLiquidStatusChanged(callback: (unit: TSUnit, newStatus: TSMutableNumber<LiquidStatus>) => void);
+        OnOutdoorsChanged(callback: (unit: TSUnit, newStatus: TSMutable<boolean,boolean>) => void);
+
         OnCalcMissChance(callback: (unit: TSUnit, chance: TSMutableNumber<float>)=>void)
         OnCalcHeal(callback: (healer: TSUnit, target: TSUnit, heal: TSMutableNumber<uint32>)=>void)
         OnMeleeDamageEarly(callback: (
@@ -9137,17 +9171,29 @@ declare namespace _hidden {
 
         OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void): T
         OnCheckEncounter(id: EventID, callback: (map: TSMap, player: TSPlayer)=>void): T
+
+        OnWeatherChange(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherChange(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
+
+        OnWeatherUpdate(callback: (map: TSMap, weather: TSWeather)=>void): T
+        OnWeatherUpdate(id: EventID, callback: (map: TSMap, weather: TSWeather)=>void): T
     }
 
     export class Instance<T> {
+        /**
+         * @deprecated use OnLoad and check 'created' argument
+         */
         OnCreate(callback: (instance: TSInstance)=>void): T
+        /**
+         * @deprecated use OnLoad and check 'created' argument
+         */
         OnCreate(id: EventID, callback: (instance: TSInstance)=>void): T
 
         OnReload(callback: (instance: TSInstance)=>void): T
         OnReload(id: EventID, callback: (instance: TSInstance)=>void): T
 
-        OnLoad(callback: (instance: TSInstance)=>void): T
-        OnLoad(id: EventID, callback: (instance: TSInstance)=>void): T
+        OnLoad(callback: (instance: TSInstance, created: bool)=>void): T
+        OnLoad(id: EventID, callback: (instance: TSInstance, created: bool)=>void): T
 
         OnSave(callback: (instance: TSInstance)=>void): T
         OnSave(id: EventID, callback: (instance: TSInstance)=>void): T
@@ -9303,6 +9349,8 @@ declare interface TSLootItem {
 
     GetFakeRandomSuffix(): TSNumber<uint32>
     GetFakeRandomPropertyID(): TSNumber<uint32>
+
+    GetTemplate(): TSItemTemplate
 }
 
 declare interface TSLoot {
@@ -9625,6 +9673,7 @@ declare class TSDatabaseResult {
     GetFloat(index: int): TSNumber<float>
     GetDouble(index: int): TSNumber<double>
     GetString(index: int): string;
+    GetBinary(index: int): TSArray<uint8>;
 
     GetRow(): boolean;
     IsValid(): boolean;
@@ -9649,7 +9698,8 @@ declare interface TSPreparedStatementBase {
 
     SetGUIDNumber(index: uint8, value: TSGUID): this
 
-    SetString(index: uint8, value: float): this
+    SetString(index: uint8, value: string): this
+    SetBinary(index: uint8, value: TSArray<uint8>): this
     Send(): TSDatabaseResult
     SendAsync(): void
     Send(connection: TSDatabaseConnection): TSDatabaseResult

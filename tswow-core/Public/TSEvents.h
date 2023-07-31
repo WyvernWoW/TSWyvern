@@ -41,6 +41,7 @@
 #include "TSArray.h"
 #include "TSDamageInfo.h"
 #include "TSSpell.h"
+#include "TSWeather.h"
 
 #include <cstdint>
 
@@ -455,6 +456,8 @@ struct TSEvents
         EVENT(OnEnterCombatWith, TSUnit me, TSUnit other)
         EVENT(OnExitCombatWith, TSUnit me, TSUnit other)
         EVENT(OnSetTarget, TSUnit, TSNumber<uint64> new_target, TSNumber<uint64> old_target)
+        EVENT(OnLiquidStatusChanged, TSUnit, TSMutableNumber<uint32> newStatus);
+        EVENT(OnOutdoorsChanged, TSUnit, TSMutable<bool,bool> isOutdoors);
 
         // wyvern-start
 
@@ -702,6 +705,8 @@ struct TSEvents
         ID_EVENT(OnGameObjectCreate, TSMap, TSGameObject, TSMutable<bool,bool>)
         ID_EVENT(OnGameObjectRemove, TSMap, TSGameObject)
         ID_EVENT(OnCheckEncounter, TSMap, TSPlayer)
+        ID_EVENT(OnWeatherUpdate, TSMap, TSWeather)
+        ID_EVENT(OnWeatherChange, TSMap, TSWeather)
     } Map;
 
     struct BattlegroundEvents : public TSMappedEventsDirect
@@ -791,7 +796,7 @@ struct TSEvents
         EVENTS_HEADER(InstanceEvents)
         ID_EVENT(OnCreate, TSInstance)
         ID_EVENT_FN(OnReload, ReloadInstance, TSInstance)
-        ID_EVENT(OnLoad, TSInstance)
+        ID_EVENT(OnLoad, TSInstance, bool)
         ID_EVENT(OnSave, TSInstance)
         ID_EVENT(OnUpdate, TSInstance, TSNumber<uint32> diff)
         ID_EVENT(OnPlayerEnter, TSInstance, TSPlayer)
