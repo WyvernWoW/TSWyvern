@@ -44,6 +44,11 @@ public:
 	bool IsNull() { return player == nullptr; };
 	TSDBJson* get_json() override;
 	bool CanTitanGrip();
+
+	// wyvern-start
+	bool CanDualWield();
+	// wyvern-end
+
 	bool HasRunes();
 	bool HasTalent(uint32 spellId, uint8 spec);
 	bool HasAchieved(uint32 achievementId);

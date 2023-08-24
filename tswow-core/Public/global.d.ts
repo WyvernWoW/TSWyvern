@@ -389,7 +389,14 @@ declare interface TSPlayer extends TSUnit, TSDBJsonProvider {
      *
      * @return bool canTitanGrip
      */
-    CanTitanGrip() : bool
+    CanTitanGrip(): bool
+
+    /**
+     * Returns 'true' if the [Player] can Dual Wield, 'false' otherwise.
+     * 
+     * @return bool canDualWield
+     */
+    CanDualWield(): bool
 
     /**
      * Returns 'true' if the [Player] has a talent by ID in specified spec, 'false' otherwise.

@@ -86,6 +86,18 @@ bool TSPlayer::CanTitanGrip()
     return player->CanTitanGrip();
 }
 
+// wyvern-start
+/**
+ * Returns 'true' if the [Player] can Dual Wield, 'false' otherwise.
+ * 
+ * @return bool canDualWield
+ */
+bool TSPlayer::CanDualWield()
+{
+    return player->CanDualWield();
+}
+// wyvern-end
+
 /**
  * Returns 'true' if the [Player] has a talent by ID in specified spec, 'false' otherwise.
  *
