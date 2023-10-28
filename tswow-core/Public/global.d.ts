@@ -7507,7 +7507,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetBonding(): TSNumber<uint32>
     SetBonding(value: uint32): void
     GetDescription(): string;
-    SetDescription(value: uint32): void
+    SetDescription(value: string): void
     GetPageText(): TSNumber<uint32>
     SetPageText(value: uint32): void
     GetLanguageID(): TSNumber<uint32>
